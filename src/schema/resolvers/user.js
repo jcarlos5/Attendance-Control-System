@@ -72,7 +72,70 @@ const queries = {
 	},
 };
 
-const mutations = {};
+const mutations = {
+	createUser: async (parent, args, context) => {
+		role = context.USER_DATA.role;
+		if (role == 'ADMIN') {
+			const data = {
+				email: args.email,
+				name: args.name,
+				lastname: args.lastname,
+				photo: args.photo,
+			};
+			if (args.role) data.role = args.role;
+			return await context.prisma.user.create({ data }).catch((err) => err);
+		} else {
+			if (args.password) {
+				const data = {
+					email: args.email,
+					name: args.name,
+					lastname: args.lastname,
+					password: await hash(args.password, 10),
+				};
+				return await context.prisma.user.create({ data }).catch((err) => err);
+			} else {
+				throw new Error(ERRORS.DATA_ERROR);
+			}
+		}
+	},
+	updateUser: async (parent, args, context) => {
+		role = context.USER_DATA.role;
+		const data = {};
+		if (role == 'ADMIN' && args.id) {
+			if (args.email) data.email = args.email;
+			if (args.name) data.name = args.name;
+			if (args.lastname) data.lastname = args.lastname;
+			if (args.role) data.role = args.role;
+			if (args.photo) data.photo = args.photo;
+			return await context.prisma.user
+				.update({ where: { id: parseInt(args.id) }, data })
+				.catch((err) => err);
+		} else {
+			if (context.USER_DATA.id) {
+				if (args.email) data.email = args.email;
+				if (args.name) data.name = args.name;
+				if (args.lastname) data.lastname = args.lastname;
+				if (args.photo) data.photo = args.photo;
+				if (args.password) data.password = await hash(args.password, 10);
+				return await context.prisma.user
+					.update({ where: { id: parseInt(context.USER_DATA.id) }, data })
+					.catch((err) => err);
+			} else {
+				throw new Error(ERRORS.SESION_ERROR);
+			}
+		}
+	},
+	deleteUser: async (parent, args, context) => {
+		role = context.USER_DATA.role;
+		if (role == 'ADMIN' && args.id) {
+			return await context.prisma.user
+				.delete({ where: { id: parseInt(args.id) } })
+				.catch((err) => err);
+		} else {
+			throw new Error(ERRORS.PERMISSIONS_ERROR);
+		}
+	},
+};
 
 module.exports = {
 	model,

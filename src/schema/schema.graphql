@@ -3,9 +3,12 @@ scalar DateTime
 type User {
 	id: ID!
 	createdAt: DateTime!
+	verifiedAt: DateTime
 	email: String!
+	password: String
 	name: String!
-	lastName: String!
+	lastname: String!
+	photo: String!
 	role: Role!
 	attendances: [Attendance]
 	attendanceLogs: [AttendanceLog]
@@ -26,9 +29,7 @@ type Attendance {
 	updatedAt: DateTime!
 	state: Presence!
 	user: User!
-	userId: Int!
 	session: Session!
-	sessionId: Int!
 	logs: [AttendanceLog]
 }
 
@@ -37,9 +38,7 @@ type AttendanceLog {
 	createdAt: DateTime!
 	state: Presence!
 	attendance: Attendance!
-	attendanceId: Int!
 	author: User!
-	authorId: Int!
 }
 
 type Ad {
@@ -84,28 +83,46 @@ type Query {
 	login(userName: String!, password: String!): String!
 	getUser(id: ID): User
 	listUsers(role: Role): [User]
+	getPost(id: ID!): Post
 	listPosts: [Post]
+	getSession(id: ID!): Session
+	listSessions: [Session]
 	listComments(author: Boolean, post: ID): [Comment]
+	getAd(id: ID!): Ad
 	listAds: [Ad]
 }
 
 type Mutation {
-	createUser(email: String!, name: String!, lastName: String!, role: Role!): User
-	updateUser(id: ID!, email: String, name: String, lastName: String, role: Role): User
-	deleteUser(id: ID!): Boolean
+	createUser(
+		email: String!
+		name: String!
+		lastname: String!
+		password: String
+		role: Role
+		photo: String
+	): User
+	updateUser(
+		id: ID
+		email: String
+		name: String
+		lastName: String
+		role: Role
+		password: String
+	): User
+	deleteUser(id: ID!): User
 	createSession(date: DateTime!): Session
 	updateSession(id: ID!, date: DateTime!): Session
-	deleteSession(id: ID!): Boolean
+	deleteSession(id: ID!): Session
 	createAttendance(session: ID!, state: Presence!, user: ID!): Attendance
 	updateAttendance(id: ID!, state: Presence!): Attendance
-	deleteAttendance(id: ID!): Boolean
+	deleteAttendance(id: ID!): Attendance
 	createPost(subject: String!, content: String!): Post
 	updatePost(id: ID!, subject: String!, content: String!): Post
-	deletePost(id: ID!): Boolean
+	deletePost(id: ID!): Post
 	createComment(content: String): Comment
 	updateComment(id: ID!, comment: String!): Comment
-	deleteComment(id: ID!): Boolean
-	createAdd(title: String!, content: String!): Ad
+	deleteComment(id: ID!): Comment
+	createAd(title: String!, content: String!): Ad
 	updateAd(id: ID!, title: String!, content: String!): Ad
-	deleteAd(id: ID!): Boolean
+	deleteAd(id: ID!): Ad
 }

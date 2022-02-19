@@ -11,6 +11,7 @@ const ERRORS = {
 	},
 	SERVER_ERROR: 'Ha ocurrido un error inesperado, no le cuente a nadie por favor :c',
 	PERMISSIONS_ERROR: 'No tiene permisos suficientes para esta acción.',
+	DATA_ERROR: 'Los datos ingresados son incorrector o están incompletos.',
 };
 
 function GET_USER_DATA(token) {

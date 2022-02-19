@@ -10,9 +10,11 @@ datasource db {
 model User {
   id              Int                 @id @default(autoincrement())
   createdAt       DateTime            @default(now())
+  verifiedAt      DateTime?
   email           String              @unique
+  password        String?
   name            String
-  lastName        String
+  lastname        String
   photo           String              @default("default.jpg")
   role            Role                @default(USER)
   attendances     Attendance[]
@@ -33,9 +35,9 @@ model Attendance {
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   state           Presence
-  user            User                @relation(fields: [userId], references: [id])
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          Int
-  session         Session             @relation(fields: [sessionId], references: [id])
+  session         Session             @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId       Int
   logs            AttendanceLog[]
 }
@@ -44,9 +46,9 @@ model AttendanceLog {
   id              Int                 @id @default(autoincrement())
   createdAt       DateTime            @default(now())
   state           Presence
-  attendance      Attendance          @relation(fields: [attendanceId], references: [id])
+  attendance      Attendance          @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
   attendanceId    Int
-  author          User                @relation(fields: [authorId], references: [id])
+  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId        Int
 }
 
@@ -55,7 +57,7 @@ model Ad {
   createdAt       DateTime            @default(now())
   title           String
   content         String
-  author          User                @relation(fields: [authorId], references: [id])
+  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId        Int
 }
 
@@ -65,7 +67,7 @@ model Post {
   updatedAt       DateTime            @updatedAt
   subject         String              @db.VarChar(255)
   content         String
-  author          User                @relation(fields: [authorId], references: [id])
+  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId        Int
   comments        Comment[]
 }
@@ -75,9 +77,9 @@ model Comment {
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   content         String              @db.VarChar(255)
-  author          User                @relation(fields: [authorId], references: [id])
+  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId        Int
-  post            Post                @relation(fields: [postId], references: [id])
+  post            Post                @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId          Int
 }
 
