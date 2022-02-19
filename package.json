@@ -1,0 +1,28 @@
+{
+	"name": "attendance-control-system",
+	"version": "1.0.0",
+	"description": "Sistema pare llevar el control de la asistencia de los participantes de un curso.",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon index.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@graphql-tools/graphql-file-loader": "^7.3.3",
+		"@graphql-tools/load": "^7.5.1",
+		"@prisma/client": "^3.9.2",
+		"apollo-server-core": "^3.6.3",
+		"apollo-server-express": "^3.6.3",
+		"bcryptjs": "^2.4.3",
+		"dotenv": "^16.0.0",
+		"express": "^4.17.3",
+		"graphql": "^16.3.0",
+		"graphql-scalars": "^1.14.1",
+		"jsonwebtoken": "^8.5.1"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.15",
+		"prisma": "^3.9.2"
+	}
+}

@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  email           String              @unique
+  name            String
+  lastName        String
+  photo           String              @default("default.jpg")
+  role            Role                @default(USER)
+  attendances     Attendance[]
+  attendanceLogs  AttendanceLog[]
+  posts           Post[]
+  comments        Comment[]
+  ads             Ad[]
+}
+
+model Session {
+  id              Int                 @id @default(autoincrement())
+  date            DateTime            @default(now())
+  attendances     Attendance[]
+}
+
+model Attendance {
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  state           Presence
+  user            User                @relation(fields: [userId], references: [id])
+  userId          Int
+  session         Session             @relation(fields: [sessionId], references: [id])
+  sessionId       Int
+  logs            AttendanceLog[]
+}
+
+model AttendanceLog {
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  state           Presence
+  attendance      Attendance          @relation(fields: [attendanceId], references: [id])
+  attendanceId    Int
+  author          User                @relation(fields: [authorId], references: [id])
+  authorId        Int
+}
+
+model Ad {
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  title           String
+  content         String
+  author          User                @relation(fields: [authorId], references: [id])
+  authorId        Int
+}
+
+model Post {
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  subject         String              @db.VarChar(255)
+  content         String
+  author          User                @relation(fields: [authorId], references: [id])
+  authorId        Int
+  comments        Comment[]
+}
+
+model Comment {
+  id              Int                 @id @default(autoincrement())
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  content         String              @db.VarChar(255)
+  author          User                @relation(fields: [authorId], references: [id])
+  authorId        Int
+  post            Post                @relation(fields: [postId], references: [id])
+  postId          Int
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Presence {
+  PRESENTE
+  TARDANZA
+  FALTA
+}
